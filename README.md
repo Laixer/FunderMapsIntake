@@ -45,8 +45,8 @@ app/pages/index.vue            the form
 app/pages/form/[bag].vue       prefilled deep link — the reason SSR is on
 app/pages/melding/[code].vue   status of an earlier melding
 server/api/upload-url.post.ts  one presigned PUT per file
-server/api/submit.post.ts      validates, then hands the melding to FunderMapsApi
-server/api/status.post.ts      meldcode + email lookup
+server/api/submit.post.ts      validates, then POSTs to FunderMapsApi /api/intake/incident
+server/api/status.post.ts      meldcode + email lookup via /api/intake/status
 ```
 
 ## Files

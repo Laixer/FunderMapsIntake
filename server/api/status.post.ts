@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
   if (!config.apiBase || !config.intakeToken) throw notFound()
 
   try {
-    return await $fetch('/api/incident/status', {
+    return await $fetch('/api/intake/status', {
       baseURL: config.apiBase,
       method: 'POST',
       headers: { authorization: `Bearer ${config.intakeToken}` },

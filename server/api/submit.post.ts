@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const result = await $fetch<{ id: string }>('/api/incident', {
+    const result = await $fetch<{ id: string }>('/api/intake/incident', {
       baseURL: config.apiBase,
       method: 'POST',
       headers: { authorization: `Bearer ${config.intakeToken}` },
