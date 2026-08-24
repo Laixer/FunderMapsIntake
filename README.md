@@ -37,3 +37,60 @@ the melder, and that label is the strongest signal the back end gets:
 - `quickscan` stops the pipeline reading a foundation type back off our own
   data — a QuickScan states a type it took from FunderMaps, so accepting it
   would be a loop. Don rejected 26 of 83 machine-read values for exactly this.
+
+## Shape
+
+```
+app/pages/index.vue            the form
+app/pages/form/[bag].vue       prefilled deep link — the reason SSR is on
+app/pages/melding/[code].vue   status of an earlier melding
+server/api/upload-url.post.ts  one presigned PUT per file
+server/api/submit.post.ts      validates, then hands the melding to FunderMapsApi
+server/api/status.post.ts      meldcode + email lookup
+```
+
+## Files
+
+Attachments upload the moment they are chosen, not on submit — a melder who
+taps "Versturen" and then waits 30 seconds for a 20 MB scan assumes it hung.
+
+The browser never holds a credential. It asks the server for one presigned PUT
+scoped to one generated key under `incident-report/`, and the melder's own
+filename never reaches the key: it travels in the submission body instead,
+which keeps traversal, unicode and duplicate names out of the bucket.
+
+On submit the server re-checks both halves of what the browser claims — the key
+must sit under `incident-report/`, and the object must exist. Without the prefix
+check a crafted submission could attach `inquiry-report/…`, someone else's
+evidence, to a melding and read it back through the portal.
+
+## What we store, and one thing that broke
+
+`incident.document_file` is meant to hold object keys. From 2020 to 2024 it did.
+Something changed in 2025 and it started storing the melder's original filename
+instead, so **238 attachments on 2025–2026 incidents cannot be located in
+Spaces** — the objects are there under a uuid nobody wrote down. Recovering them
+means matching on upload timestamp, extension and count.
+
+This app stores keys in `document_file` and the human-readable record — name,
+size, category — in `metadata.attachments`.
+
+## Meldcodes are not secrets
+
+`FIR992026-7263` is one increment from someone else's melding, so the status
+page requires the email that made the submission, and a wrong email returns
+exactly the same 404 as a code that does not exist. A distinguishable answer
+would turn the page into a way to enumerate which codes are real.
+
+## Configuration
+
+Server-only, except `NUXT_PUBLIC_API_BASE`:
+
+```
+NUXT_S3_ACCESS_KEY   NUXT_S3_SECRET_KEY   NUXT_S3_BUCKET (default: fundermaps)
+NUXT_API_BASE        NUXT_INTAKE_TOKEN
+NUXT_PUBLIC_API_BASE (the geocoder is public; the browser calls it directly)
+```
+
+Point `NUXT_S3_BUCKET` at `fundermaps-development` when developing. Nothing here
+may ever write to `dataops/` or `inquiry-report/`.

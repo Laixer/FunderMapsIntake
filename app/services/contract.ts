@@ -124,3 +124,23 @@ export const REPORTER_TYPES = [
 
 export const MAX_FILES = 10
 export const MAX_FILE_BYTES = 25 * 1024 * 1024
+
+export type AttachmentCategory = (typeof ATTACHMENT_CATEGORIES)[number]['value']
+export type ReporterType = (typeof REPORTER_TYPES)[number]['value']
+
+/**
+ * What a file most likely is, given what the melder said they were doing.
+ *
+ * Only a starting point — the select stays visible and editable, because a
+ * wrong category is worse than no category. `quickscan` in particular decides
+ * whether the pipeline is allowed to read a foundation type out of the file at
+ * all, so it must reflect the document, not the topic.
+ */
+export const DEFAULT_CATEGORY: Record<TopicKey, AttachmentCategory> = {
+  foundationType: 'archieveresearch',
+  recoveryType: 'herstelbewijs',
+  quickscan: 'quickscan',
+  foundationResearch: 'foundationresearch',
+  noDamage: 'foto',
+  other: 'overig',
+}
