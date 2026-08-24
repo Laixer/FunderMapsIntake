@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* One melder, one phone, one hand.
+   Sizes are deliberate: 16px minimum on inputs so iOS does not zoom on focus,
+   and 44px minimum on anything tappable. */
+@theme {
+  --color-ink: #14181d;
+  --color-body: #2b333c;
+  --color-muted: #5f6a76;
+  --color-faint: #8b95a1;
+  --color-line: #e2e6ea;
+  --color-line-strong: #c8cfd6;
+  --color-surface: #ffffff;
+  --color-canvas: #f5f7f9;
+  --color-brand: #1f6feb;
+  --color-brand-ink: #14539f;
+  --color-brand-tint: #eaf2fe;
+  --color-green: #2f7d51;
+  --color-green-tint: #e7f3ec;
+  --color-amber: #8a6413;
+  --color-amber-tint: #fdf3dd;
+  --color-red: #a5342a;
+  --color-red-tint: #fbeae8;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--color-canvas); color: var(--color-body); }
