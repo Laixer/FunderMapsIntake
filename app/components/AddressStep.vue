@@ -52,9 +52,9 @@ function clear() {
     <!-- Chosen: a plain confirmation, and an obvious way to change it. -->
     <div
       v-if="model"
-      class="flex items-center gap-3 rounded-xl border border-green bg-green-tint px-4 py-3"
+      class="flex items-start gap-3 rounded-xl border border-green bg-green-tint px-4 py-3"
     >
-      <span aria-hidden="true" class="text-green">✓</span>
+      <span aria-hidden="true" class="mt-0.5 text-green">✓</span>
       <span class="min-w-0 flex-1">
         <span class="block font-semibold text-ink">{{ model.label }}</span>
         <span class="block font-mono text-sm text-muted">BAG {{ model.bagId }}</span>

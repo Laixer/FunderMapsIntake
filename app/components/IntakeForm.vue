@@ -40,6 +40,32 @@ const showTopic = computed(() => !!address.value)
 const showUpload = computed(() => showTopic.value && !!topic.value)
 const showContact = computed(() => showUpload.value && (!evidenceRequired.value || settled.value.length > 0))
 
+/**
+ * Bring a newly revealed step into view.
+ *
+ * Progressive disclosure has one failure mode on a phone: the next question
+ * appears below the fold and the melder, seeing nothing change, assumes the tap
+ * did nothing. Only fires on a real false-to-true transition after mount, so a
+ * prefilled deep link does not yank the page on first paint.
+ */
+function revealOnce(source: Ref<boolean>) {
+  const anchor = ref<HTMLElement | null>(null)
+  watch(source, (now, before) => {
+    if (!now || before) return
+    nextTick(() => {
+      anchor.value?.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start',
+      })
+    })
+  })
+  return anchor
+}
+
+const topicAnchor = revealOnce(showTopic)
+const uploadAnchor = revealOnce(showUpload)
+const contactAnchor = revealOnce(showContact)
+
 const emailLooksReal = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim()))
 
 /** Why the button is disabled, in the melder's words. Never a silent no-op. */
@@ -109,7 +135,7 @@ async function submit() {
     <AddressStep v-model="address" />
 
     <template v-if="showTopic">
-      <hr class="border-line" />
+      <hr :ref="(el) => (topicAnchor = el as HTMLElement)" class="border-line scroll-mt-4" />
       <TopicStep
         v-model:topic="topic"
         v-model:foundation-type="foundationType"
@@ -121,7 +147,7 @@ async function submit() {
     </template>
 
     <template v-if="showUpload">
-      <hr class="border-line" />
+      <hr :ref="(el) => (uploadAnchor = el as HTMLElement)" class="border-line scroll-mt-4" />
       <UploadStep
         :topic="topic"
         :required="evidenceRequired"
@@ -135,7 +161,7 @@ async function submit() {
     </template>
 
     <template v-if="showContact">
-      <hr class="border-line" />
+      <hr :ref="(el) => (contactAnchor = el as HTMLElement)" class="border-line scroll-mt-4" />
       <ContactStep
         v-model:type="reporterType"
         v-model:name="name"

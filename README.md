@@ -94,3 +94,33 @@ NUXT_PUBLIC_API_BASE (the geocoder is public; the browser calls it directly)
 
 Point `NUXT_S3_BUCKET` at `fundermaps-development` when developing. Nothing here
 may ever write to `dataops/` or `inquiry-report/`.
+
+## The bucket needs CORS, or uploads silently die
+
+The browser PUTs straight to Spaces, which is a cross-origin request, and
+**neither `fundermaps` nor `fundermaps-development` had any CORS rule**. curl
+does not care and passes; a real browser refuses the PUT and every attachment
+fails with "Uploaden is niet gelukt".
+
+`fundermaps-development` now allows PUT from `localhost:4321` and `:3000`.
+Before this app is deployed, the production bucket needs the same rule with the
+real origin:
+
+```json
+{ "CORSRules": [ {
+  "AllowedOrigins": ["https://<intake-host>"],
+  "AllowedMethods": ["PUT"],
+  "AllowedHeaders": ["content-type"],
+  "MaxAgeSeconds": 3000
+} ] }
+```
+
+```
+aws s3api put-bucket-cors --bucket fundermaps \
+  --cors-configuration file://cors.json \
+  --endpoint-url https://ams3.digitaloceanspaces.com
+```
+
+PUT only, and no GET: CORS grants a browser nothing a presigned URL did not
+already grant, but there is no reason to widen the main data bucket further
+than the one method this app uses.
