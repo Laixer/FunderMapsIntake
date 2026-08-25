@@ -31,10 +31,26 @@ useHead({
   meta: [{ name: 'robots', content: 'noindex' }],
 })
 
+/**
+ * Our own geocoder first, PDOK second.
+ *
+ * Both know most addresses, but they disagree at the edges and each is right
+ * about something different. Ours is the authority for our own data — it is
+ * what the submission will be resolved against, so a prefill it cannot confirm
+ * is a prefill that would mislead. PDOK is fresher, and covers addresses our
+ * BAG copy has not imported yet.
+ *
+ * The gap is not hypothetical: `0344200000009181` (Euclideslaan 64, Utrecht)
+ * sits in `geocoder.address` and is absent from the Locatieserver, so asking
+ * PDOK first made a working link say "wij konden dit pand niet terugvinden"
+ * about a building we hold a full record for.
+ */
 async function resolveIdentifier(input: string): Promise<ResolvedAddress | null> {
-  if (/^\d{16}$/.test(input)) return await fromPdok(input)
-  if (/^NL\.IMBAG\.PAND\.\d+$/i.test(input)) return await fromGeocoder(input)
-  return null
+  const bare = /^\d{16}$/.test(input)
+  const pand = /^NL\.IMBAG\.(PAND|NUMMERAANDUIDING)\.\d+$/i.test(input)
+  if (!bare && !pand) return null
+
+  return (await fromGeocoder(input)) ?? (bare ? await fromPdok(input) : null)
 }
 
 async function fromPdok(bagId: string): Promise<ResolvedAddress | null> {
@@ -57,11 +73,11 @@ async function fromPdok(bagId: string): Promise<ResolvedAddress | null> {
   }
 }
 
-async function fromGeocoder(pandId: string): Promise<ResolvedAddress | null> {
+async function fromGeocoder(identifier: string): Promise<ResolvedAddress | null> {
   const base = useRuntimeConfig().public.apiBase
   if (!base) return null
   try {
-    const b = await $fetch<Record<string, any>>(`/api/geocoder/building-info/${encodeURIComponent(pandId)}`, { baseURL: base })
+    const b = await $fetch<Record<string, any>>(`/api/geocoder/building-info/${encodeURIComponent(identifier)}`, { baseURL: base })
     // A pand with no address row is a real case — sheds, transformer huts, and
     // buildings mid-BAG-update all come back this way. There is nothing to
     // prefill, so fall through to the blank form rather than guessing.
