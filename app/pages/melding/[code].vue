@@ -3,7 +3,7 @@
  * The melding portal.
  *
  * A meldcode alone is not a credential — the codes are sequential, so anyone
- * could count from FIR012026-1 upward. The email address that made the
+ * could count from FM2026-000001 upward. The email address that made the
  * submission has to match before anything is shown, and the wrong-answer
  * response is deliberately identical to the not-found one so the page cannot
  * be used to test whether a code exists.

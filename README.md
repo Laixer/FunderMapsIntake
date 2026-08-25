@@ -55,25 +55,37 @@ Attachments upload the moment they are chosen, not on submit — a melder who
 taps "Versturen" and then waits 30 seconds for a 20 MB scan assumes it hung.
 
 The browser never holds a credential. It asks the server for one presigned PUT
-scoped to one generated key under `incident-report/`, and the melder's own
+scoped to one generated key under `intake/`, and the melder's own
 filename never reaches the key: it travels in the submission body instead,
 which keeps traversal, unicode and duplicate names out of the bucket.
 
 On submit the server re-checks both halves of what the browser claims — the key
-must sit under `incident-report/`, and the object must exist. Without the prefix
-check a crafted submission could attach `inquiry-report/…`, someone else's
-evidence, to a melding and read it back through the portal.
+must sit under `intake/`, and the object must exist. Without the prefix check a
+crafted submission could attach `inquiry-report/…`, someone else's evidence, to
+a submission and read it back through the portal.
 
-## What we store, and one thing that broke
+`intake/` is its own prefix on purpose. `incident-report/` is the old loket's
+attachments and most of what arrives here is not an incident; `dataops/` is the
+pipeline's scratch space and a member of the public's 1912 drawing is not
+scratch; `inquiry-report/` is evidence behind a committed inquiry, which a
+submission has not earned until a reviewer accepts it.
 
-`incident.document_file` is meant to hold object keys. From 2020 to 2024 it did.
-Something changed in 2025 and it started storing the melder's original filename
-instead, so **238 attachments on 2025–2026 incidents cannot be located in
-Spaces** — the objects are there under a uuid nobody wrote down. Recovering them
-means matching on upload timestamp, extension and count.
+## A submission is a dossier, not an incident
 
-This app stores keys in `document_file` and the human-readable record — name,
-size, category — in `metadata.attachments`.
+The first version of this wrote every submission to `report.incident`. That was
+wrong twice: it calls a bureau report an incident, and **nothing consumes that
+table** — two read-only GET endpoints across nine repositories, no Studio route,
+no worker, no Windmill flow. A funderingsonderzoek delivered that way would have
+sat somewhere nobody works from and never reached the review queue.
+
+Submissions now become a `dataops.dossier` on the `upload` channel, with one
+artifact per file. Whether a dossier turns into an incident, an inquiry or a
+recovery is a reviewer's call at commit time — the front door cannot know, and
+four of the six topics are documents rather than meldingen.
+
+The melder gets one `reference` (`FM2026-000042`) whatever their submission
+becomes. They should not have to know that their drawing turned into an inquiry
+and their complaint into an incident.
 
 ## Meldcodes are not secrets
 

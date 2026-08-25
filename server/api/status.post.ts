@@ -3,7 +3,7 @@ import { throttle } from '../utils/throttle'
 /**
  * Look up one melding, by code plus the email that made it.
  *
- * Meldcodes are sequential — `FIR012026-7263` is one away from someone else's —
+ * Meldcodes are sequential — `FM2026-000042` is one away from someone else's —
  * so the code by itself proves nothing. Every failure returns the same 404
  * regardless of which half was wrong, because a distinguishable "wrong email"
  * would turn this into a way to enumerate which codes exist.
@@ -20,16 +20,17 @@ export default defineEventHandler(async (event) => {
 
   const notFound = () => createError({ statusCode: 404, statusMessage: 'Niet gevonden' })
 
-  if (!/^FIR\d{6}-\d+$/.test(meldcode) || !EMAIL.test(email)) throw notFound()
+  if (!/^FM\d{4}-\d{6}$/.test(meldcode) || !EMAIL.test(email)) throw notFound()
   if (!config.apiBase || !config.intakeToken) throw notFound()
 
   try {
-    return await $fetch('/api/intake/status', {
+    const found = await $fetch<Record<string, unknown>>('/api/intake/status', {
       baseURL: config.apiBase,
       method: 'POST',
       headers: { authorization: `Bearer ${config.intakeToken}` },
-      body: { meldcode, email },
+      body: { reference: meldcode, email },
     })
+    return { ...found, meldcode: found.reference }
   } catch {
     throw notFound()
   }

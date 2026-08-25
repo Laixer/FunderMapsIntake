@@ -1,12 +1,12 @@
 import { HeadObjectCommand } from '@aws-sdk/client-s3'
-import { INCIDENT_PREFIX, spaces } from '../utils/spaces'
+import { INTAKE_PREFIX, spaces } from '../utils/spaces'
 import { clientIp, throttle } from '../utils/throttle'
 
 /**
  * Take the submission and hand it to FunderMaps.
  *
  * The browser tells us which object keys to attach, so both halves of that
- * claim get checked here: the key must sit under `incident-report/`, and the
+ * claim get checked here: the key must sit under `intake/`, and the
  * object must actually exist. Without the prefix check a crafted submission
  * could attach `inquiry-report/...` — someone else's evidence — to a public
  * incident and read it back out through the melding portal.
@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
   const attachments = []
   for (const a of claimed) {
     const key = String(a?.key ?? '')
-    if (!key.startsWith(INCIDENT_PREFIX) || key.includes('..')) {
+    if (!key.startsWith(INTAKE_PREFIX) || key.includes('..')) {
       throw createError({ statusCode: 400, statusMessage: 'Ongeldige bijlage' })
     }
     try {
@@ -69,6 +69,11 @@ export default defineEventHandler(async (event) => {
   const payload = {
     building: bagId,
     topic: String(body.topic),
+    // The Dutch label as the melder read it. Kept because the wording of these
+    // topics has changed before and will again — `noDamage` still carries a
+    // name from when it meant something else — and a reviewer months later
+    // should see the question that was actually put to the person.
+    topicLabel: String(body.topicLabel ?? '').slice(0, 200),
     answers: body.answers ?? {},
     attachments,
     contact: {
@@ -80,10 +85,10 @@ export default defineEventHandler(async (event) => {
     },
     owner: body.owner === true,
     note: String(body.note ?? '').slice(0, 5000) || null,
+    formVersion: String(body.formVersion ?? '').slice(0, 64),
     // Provenance the reviewer sees next to the answers. Recorded because a
     // submission is read months later by someone deciding whether to trust it.
     source: {
-      form: String(body.formVersion ?? ''),
       submission: String(body.submissionId ?? ''),
       address: String(body.address?.label ?? ''),
       ip: clientIp(event),
@@ -93,13 +98,18 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const result = await $fetch<{ id: string }>('/api/intake/incident', {
+    // A submission becomes a dossier, not an incident. Four of the six topics
+    // deliver a document; whether any of it is a melding is a reviewer's call
+    // at commit time, not the front door's.
+    const result = await $fetch<{ reference: string }>('/api/intake/dossier', {
       baseURL: config.apiBase,
       method: 'POST',
       headers: { authorization: `Bearer ${config.intakeToken}` },
       body: payload,
     })
-    return { meldcode: result.id }
+    // "Meldcode" is the word the melder reads; `reference` is what the wire
+    // and the database call it. The mapping lives here and nowhere else.
+    return { meldcode: result.reference }
   } catch (err: any) {
     // Never surface the upstream body: it can carry internal detail, and the
     // melder can do nothing with it either way.

@@ -94,6 +94,7 @@ async function submit() {
         formVersion: FORM_VERSION,
         address: address.value,
         topic: topic.value,
+        topicLabel: chosen.value?.label ?? '',
         answers: {
           foundationType: foundationType.value || undefined,
           recoveryType: recoveryType.value || undefined,

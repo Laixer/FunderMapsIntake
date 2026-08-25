@@ -25,11 +25,21 @@ export function spaces(): S3Client {
 }
 
 /**
- * Attachments land under `incident-report/`, flat, keyed by uuid — the same
- * layout the portal has used since 2020.
+ * Public submissions land under `intake/`, flat, keyed by uuid.
  *
- * `dataops/` and `inquiry-report/` are separate worlds and nothing here may
- * ever write into them: one holds a scratch pipeline, the other holds the
- * evidence the whole database rests on.
+ * Its own prefix, deliberately. Three others already exist and none of them is
+ * this:
+ *
+ * - `incident-report/` is the old loket's attachments. A funderingsonderzoek
+ *   from a bureau is not an incident, and filing it there would repeat at the
+ *   storage layer the mistake the intake route made in the database.
+ * - `dataops/` is the pipeline's scratch space — documents it fetched to read.
+ *   What a member of the public hands us is not scratch; it may be the only
+ *   copy of a 1912 drawing in existence.
+ * - `inquiry-report/` is evidence behind a committed inquiry, the thing the
+ *   whole database rests on. A submission has not earned that until a reviewer
+ *   accepts it.
+ *
+ * So: `intake/` is what arrived, unjudged. Nothing here may write anywhere else.
  */
-export const INCIDENT_PREFIX = 'incident-report/'
+export const INTAKE_PREFIX = 'intake/'

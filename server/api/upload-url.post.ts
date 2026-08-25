@@ -1,6 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { INCIDENT_PREFIX, spaces } from '../utils/spaces'
+import { INTAKE_PREFIX, spaces } from '../utils/spaces'
 import { throttle } from '../utils/throttle'
 
 /**
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
   const fallback = String(body?.name ?? '').split('.').pop()?.toLowerCase()
   const ext = EXTENSION[type] ?? (fallback && /^[a-z0-9]{2,5}$/.test(fallback) ? fallback : 'bin')
 
-  const key = `${INCIDENT_PREFIX}${crypto.randomUUID()}.${ext}`
+  const key = `${INTAKE_PREFIX}${crypto.randomUUID()}.${ext}`
 
   const url = await getSignedUrl(
     spaces(),

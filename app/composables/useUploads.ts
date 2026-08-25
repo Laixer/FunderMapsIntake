@@ -7,7 +7,7 @@
  * the last step the bytes are already in the bucket.
  *
  * The browser never holds a credential: it asks our server for one presigned
- * PUT per file, scoped to a single key under `incident-report/`.
+ * PUT per file, scoped to a single key under `intake/`.
  */
 import { MAX_FILES, MAX_FILE_BYTES, type AttachmentCategory } from '~/services/contract'
 
