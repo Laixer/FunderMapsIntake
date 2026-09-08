@@ -56,7 +56,9 @@ const tone: Record<Status['state'], string> = {
   <section class="flex flex-col gap-5">
     <div>
       <h1 class="text-2xl font-bold text-ink">Melding {{ code }}</h1>
-      <p class="mt-1 text-muted">
+      <!-- The instruction belongs to the form. Once the melding is on
+           screen it read as a demand with nothing to type into (#321 §10). -->
+      <p v-if="!status" class="mt-1 text-muted">
         Vul het e-mailadres in waarmee u deze melding heeft gedaan.
       </p>
     </div>
