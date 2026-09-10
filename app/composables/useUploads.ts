@@ -17,6 +17,8 @@ export interface Upload {
   id: string
   name: string
   size: number
+  /** The browser's idea of the type; ingest sniffs the real one, this is the hint on the row. */
+  mime: string
   /** The melder's own label for this file — the strongest signal triage gets. */
   category: AttachmentCategory
   state: UploadState
@@ -69,6 +71,7 @@ export function useUploads(submissionId: () => string) {
         id: crypto.randomUUID(),
         name: file.name,
         size: file.size,
+        mime: file.type || 'application/octet-stream',
         category,
         state: 'uploading',
         progress: 0,
@@ -86,7 +89,7 @@ export function useUploads(submissionId: () => string) {
           submissionId: submissionId(),
           name: file.name,
           size: file.size,
-          type: file.type || 'application/octet-stream',
+          type: entry.mime,
         },
       })
       await put(grant.url, file, (p) => (entry.progress = p))

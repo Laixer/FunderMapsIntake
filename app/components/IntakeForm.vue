@@ -106,6 +106,7 @@ async function submit() {
           key: u.key,
           name: u.name,
           size: u.size,
+          mime: u.mime,
           category: u.category,
         })),
         contact: {
