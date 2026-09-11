@@ -21,7 +21,10 @@ interface Attachment {
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 export default defineEventHandler(async (event) => {
-  throttle(event, 10, 60_000)
+  // 30/min, was 10: a real melder submits once, but testers and an office
+  // behind one NAT address share the bucket (Don hit it 2026-09-11). Still a
+  // speed bump against a script, not a security control.
+  throttle(event, 30, 60_000)
 
   const body = await readBody<Record<string, any>>(event)
   const config = useRuntimeConfig()
