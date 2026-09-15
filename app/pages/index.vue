@@ -6,7 +6,7 @@ useHead({
       name: 'description',
       content:
         'Geef door dat de funderingsinformatie van een pand niet klopt, of lever een ' +
-        'funderingsonderzoek, QuickScan of bewijs van herstel aan.',
+        'funderingsonderzoek of bewijs van herstel aan.',
     },
   ],
 })
