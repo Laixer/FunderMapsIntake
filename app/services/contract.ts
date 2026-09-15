@@ -28,7 +28,16 @@ export interface Topic {
   evidenceRequired: boolean
   /** Shown when they have nothing to attach. */
   evidenceHint?: string
+  /**
+   * Not offered on the form; the key stays because the triage rules match it
+   * and older submissions carry it. Don, 2026-09-15: QuickScans keep coming in
+   * through FunderConsult's own feedback form until that moves here too.
+   */
+  hidden?: boolean
 }
+
+/** Where a QuickScan goes instead, for now. */
+export const QUICKSCAN_FORM_URL = 'https://funderconsult.com/feedback/form'
 
 export const TOPICS: readonly Topic[] = [
   {
@@ -51,6 +60,7 @@ export const TOPICS: readonly Topic[] = [
     hint: 'Een Fase 0-rapport of QuickScan funderingsrisico.',
     evidenceRequired: true,
     evidenceHint: 'Voeg het rapport zelf toe.',
+    hidden: true,
   },
   {
     key: 'foundationResearch',
