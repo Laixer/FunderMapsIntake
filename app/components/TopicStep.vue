@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { TOPICS, FOUNDATION_GROUPS, RECOVERY_TYPES, RISK_DIRECTIONS, RISK_CLASSES } from '~/services/contract'
+import { TOPICS, QUICKSCAN_FORM_URL, FOUNDATION_GROUPS, RECOVERY_TYPES, RISK_DIRECTIONS, RISK_CLASSES } from '~/services/contract'
+
+/** What the form offers; hidden keys stay in the contract for triage and old submissions. */
+const offered = TOPICS.filter((t) => !t.hidden)
 import type { TopicKey } from '~/services/contract'
 
 /**
@@ -28,7 +31,7 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
 
     <div class="flex flex-col gap-2">
       <label
-        v-for="t in TOPICS"
+        v-for="t in offered"
         :key="t.key"
         class="flex min-h-14 cursor-pointer items-start gap-3 rounded-xl border bg-surface px-4 py-3"
         :class="topic === t.key ? 'border-brand ring-2 ring-brand-tint' : 'border-line hover:border-line-strong'"
@@ -46,6 +49,10 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
         </span>
       </label>
     </div>
+    <p class="text-sm text-muted">
+      Heeft u een QuickScan of Fase 0-rapport? Die levert u voorlopig aan via
+      <a :href="QUICKSCAN_FORM_URL" class="font-semibold text-brand underline underline-offset-2" target="_blank" rel="noopener">funderconsult.com/feedback/form</a>.
+    </p>
 
     <!-- The branch. Only what this topic needs, nothing else. -->
     <div v-if="chosen" class="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
