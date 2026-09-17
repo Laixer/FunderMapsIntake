@@ -74,6 +74,11 @@ export const TOPICS: readonly Topic[] = [
     label: 'Het funderingsrisico klopt niet',
     hint: 'De risicoklasse die wij tonen past niet bij dit pand.',
     evidenceRequired: false,
+    // Not blocking: a risk can be wrong without the melder holding a report.
+    // But half of these arrive with nothing and get answered "wij hebben een
+    // onderbouwing nodig" by hand (Don, 2026-09-17), so say it up front.
+    evidenceHint:
+      'Stuur mee waarop u dat baseert: een funderingsonderzoek, een bouwkundig rapport met funderingsgegevens of zakkingsmetingen. Zonder document kunnen wij het risico meestal niet aanpassen.',
   },
   {
     key: 'other',

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ATTACHMENT_CATEGORIES, MAX_FILES, DEFAULT_CATEGORY, type AttachmentCategory, type TopicKey } from '~/services/contract'
+import { ATTACHMENT_CATEGORIES, MAX_FILES, DEFAULT_CATEGORY, TOPICS, type AttachmentCategory, type TopicKey } from '~/services/contract'
 import { humanSize, type Upload } from '~/composables/useUploads'
 
 /**
@@ -25,6 +25,8 @@ const emit = defineEmits<{
 }>()
 
 const input = ref<HTMLInputElement | null>(null)
+/** The topic's own nudge for optional evidence, when it has one (noDamage). */
+const optionalNudge = computed(() => TOPICS.find((t) => t.key === props.topic)?.evidenceHint ?? null)
 const full = computed(() => props.uploads.length >= MAX_FILES)
 
 function onPick(e: Event) {
@@ -48,6 +50,9 @@ function onPick(e: Event) {
         <template v-if="required">
           Zonder document kunnen wij dit niet verwerken. PDF of foto, maximaal
           {{ MAX_FILES }} bestanden.
+        </template>
+        <template v-else-if="optionalNudge">
+          {{ optionalNudge }} PDF of foto, maximaal {{ MAX_FILES }} bestanden.
         </template>
         <template v-else>
           Heeft u een rapport, tekening of foto? Voeg het toe — dat maakt de
