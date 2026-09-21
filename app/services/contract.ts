@@ -39,6 +39,10 @@ export interface Topic {
 /** Where a QuickScan goes instead, for now. */
 export const QUICKSCAN_FORM_URL = 'https://funderconsult.com/feedback/form'
 
+/** Where funderingsherstel is registered instead, for now (Don, 2026-09-21). */
+export const RECOVERY_FORM_URL =
+  'https://funderconsult.com/funderportal/herstelregistratie/form'
+
 export const TOPICS: readonly Topic[] = [
   {
     key: 'foundationType',
@@ -59,6 +63,10 @@ export const TOPICS: readonly Topic[] = [
      * (report.recovery), so a herstelmelding cannot be finished — it has to be
      * typed into the Studio by hand and the link to the document is lost.
      * Laixer/FunderMapsClientApp#341. Flip this back the moment that lands.
+     *
+     * Not a dead end: herstel is registered through FunderConsult's own form
+     * in the meantime (RECOVERY_FORM_URL), and TopicStep says so, exactly as
+     * it does for the QuickScan. Don, 2026-09-21.
      */
     hidden: true,
   },
