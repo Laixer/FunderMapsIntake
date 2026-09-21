@@ -53,6 +53,14 @@ export const TOPICS: readonly Topic[] = [
     hint: 'Er is funderingsherstel uitgevoerd aan dit pand.',
     evidenceRequired: true,
     evidenceHint: 'Voeg de factuur, de oplevering of het onderzoek toe.',
+    /**
+     * Temporarily off the form (Don, 2026-09-21). The review lane can only
+     * commit a dossier as a rapportage; there is no herstel target yet
+     * (report.recovery), so a herstelmelding cannot be finished — it has to be
+     * typed into the Studio by hand and the link to the document is lost.
+     * Laixer/FunderMapsClientApp#341. Flip this back the moment that lands.
+     */
+    hidden: true,
   },
   {
     key: 'quickscan',
