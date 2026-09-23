@@ -34,6 +34,11 @@ export interface Topic {
    * through FunderConsult's own feedback form until that moves here too.
    */
   hidden?: boolean
+  /**
+   * Offered, but handled elsewhere: choosing it shows a link to this form and
+   * the melding stops here (no upload, no contact, no send).
+   */
+  externalUrl?: string
 }
 
 /** Where funderingsherstel is registered instead, for now (Don, 2026-09-21). */
@@ -50,22 +55,18 @@ export const TOPICS: readonly Topic[] = [
   },
   {
     key: 'recoveryType',
-    label: 'De fundering is hersteld',
+    label: 'Ik wil een herstel registreren',
     hint: 'Er is funderingsherstel uitgevoerd aan dit pand.',
     evidenceRequired: true,
     evidenceHint: 'Voeg de factuur, de oplevering of het onderzoek toe.',
     /**
-     * Temporarily off the form (Don, 2026-09-21). The review lane can only
-     * commit a dossier as a rapportage; there is no herstel target yet
-     * (report.recovery), so a herstelmelding cannot be finished — it has to be
-     * typed into the Studio by hand and the link to the document is lost.
-     * Laixer/FunderMapsClientApp#341. Flip this back the moment that lands.
-     *
-     * Not a dead end: herstel is registered through FunderConsult's own form
-     * in the meantime (RECOVERY_FORM_URL), and TopicStep says so, exactly as
-     * it does for the QuickScan. Don, 2026-09-21.
+     * Offered, but registered elsewhere (Don, 2026-09-23). Herstel goes
+     * through the Nationaal Herstel Register: a person validates the documents
+     * and issues a certificate, and the result reaches FunderMaps through the
+     * API. That process stays there, so this topic only points to its form.
+     * (Hidden 2026-09-21 to 2026-09-23 with a line of text under the topics.)
      */
-    hidden: true,
+    externalUrl: RECOVERY_FORM_URL,
   },
   {
     key: 'quickscan',

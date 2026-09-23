@@ -37,7 +37,9 @@ const evidenceRequired = computed(() => chosen.value?.evidenceRequired ?? false)
 
 // Steps appear in order; each needs the one before it answered.
 const showTopic = computed(() => !!address.value)
-const showUpload = computed(() => showTopic.value && !!topic.value)
+// A topic handled elsewhere (herstel) ends the form at the topic step.
+const external = computed(() => !!chosen.value?.externalUrl)
+const showUpload = computed(() => showTopic.value && !!topic.value && !external.value)
 const showContact = computed(() => showUpload.value && (!evidenceRequired.value || settled.value.length > 0))
 
 /**
@@ -72,6 +74,7 @@ const emailLooksReal = computed(() => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email
 const blocker = computed(() => {
   if (!address.value) return 'Kies eerst een adres.'
   if (!topic.value) return 'Kies wat u wilt doorgeven.'
+  if (external.value) return 'Dit onderwerp registreert u via het formulier hierboven.'
   if (evidenceRequired.value && settled.value.length === 0) return 'Voeg het document toe waar dit uit blijkt.'
   if (busy.value) return 'Een bestand wordt nog geüpload.'
   if (!emailLooksReal.value) return 'Vul een e-mailadres in waar wij u kunnen bereiken.'
