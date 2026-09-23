@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TOPICS, RECOVERY_FORM_URL, FOUNDATION_GROUPS, RECOVERY_TYPES, RISK_DIRECTIONS, RISK_CLASSES } from '~/services/contract'
+import { TOPICS, FOUNDATION_GROUPS, RECOVERY_TYPES, RISK_DIRECTIONS, RISK_CLASSES } from '~/services/contract'
 
 /** What the form offers; hidden keys stay in the contract for triage and old submissions. */
 const offered = TOPICS.filter((t) => !t.hidden)
@@ -49,14 +49,22 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
         </span>
       </label>
     </div>
-    <p class="text-sm text-muted">
-      Is de fundering hersteld? Dat registreert u voorlopig via
-      <a :href="RECOVERY_FORM_URL" class="font-semibold text-brand underline underline-offset-2" target="_blank" rel="noopener">funderconsult.com/funderportal/herstelregistratie/form</a>.
-    </p>
 
     <!-- The branch. Only what this topic needs, nothing else. -->
     <div v-if="chosen" class="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
-      <template v-if="chosen.key === 'foundationType'">
+      <!-- Handled elsewhere: say where, and stop here. -->
+      <template v-if="chosen.externalUrl">
+        <p class="text-ink">
+          Een funderingsherstel registreert u bij het Nationaal Herstel Register. Daar worden de stukken
+          gecontroleerd en krijgt u een certificaat; daarna verschijnt het herstel ook in FunderMaps.
+        </p>
+        <a :href="chosen.externalUrl" target="_blank" rel="noopener"
+           class="flex min-h-13 items-center justify-center rounded-xl bg-brand px-4 text-base font-bold text-white">
+          Naar het herstelformulier
+        </a>
+      </template>
+
+      <template v-else-if="chosen.key === 'foundationType'">
         <label class="block">
           <span class="block font-semibold text-ink">Wat is het funderingstype?</span>
           <span class="mb-2 block text-sm text-muted">Weet u het niet zeker? Laat het leeg.</span>
