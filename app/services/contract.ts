@@ -36,9 +36,6 @@ export interface Topic {
   hidden?: boolean
 }
 
-/** Where a QuickScan goes instead, for now. */
-export const QUICKSCAN_FORM_URL = 'https://funderconsult.com/feedback/form'
-
 /** Where funderingsherstel is registered instead, for now (Don, 2026-09-21). */
 export const RECOVERY_FORM_URL =
   'https://funderconsult.com/funderportal/herstelregistratie/form'
@@ -76,7 +73,9 @@ export const TOPICS: readonly Topic[] = [
     hint: 'Een Fase 0-rapport of QuickScan funderingsrisico.',
     evidenceRequired: true,
     evidenceHint: 'Voeg het rapport zelf toe.',
-    hidden: true,
+    // Back on the form 2026-09-24 (Don, 2026-09-23): FunderConsult's feedback
+    // form is cut back and QuickScans come in here, including the requests.
+    // Answered from Studio with the #363 standard answers.
   },
   {
     key: 'foundationResearch',

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TOPICS, QUICKSCAN_FORM_URL, RECOVERY_FORM_URL, FOUNDATION_GROUPS, RECOVERY_TYPES, RISK_DIRECTIONS, RISK_CLASSES } from '~/services/contract'
+import { TOPICS, RECOVERY_FORM_URL, FOUNDATION_GROUPS, RECOVERY_TYPES, RISK_DIRECTIONS, RISK_CLASSES } from '~/services/contract'
 
 /** What the form offers; hidden keys stay in the contract for triage and old submissions. */
 const offered = TOPICS.filter((t) => !t.hidden)
@@ -49,10 +49,6 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
         </span>
       </label>
     </div>
-    <p class="text-sm text-muted">
-      Heeft u een QuickScan of Fase 0-rapport? Die levert u voorlopig aan via
-      <a :href="QUICKSCAN_FORM_URL" class="font-semibold text-brand underline underline-offset-2" target="_blank" rel="noopener">funderconsult.com/feedback/form</a>.
-    </p>
     <p class="text-sm text-muted">
       Is de fundering hersteld? Dat registreert u voorlopig via
       <a :href="RECOVERY_FORM_URL" class="font-semibold text-brand underline underline-offset-2" target="_blank" rel="noopener">funderconsult.com/funderportal/herstelregistratie/form</a>.
