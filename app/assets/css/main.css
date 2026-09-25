@@ -12,9 +12,11 @@
   --color-line-strong: #c8cfd6;
   --color-surface: #ffffff;
   --color-canvas: #f5f7f9;
-  --color-brand: #1f6feb;
-  --color-brand-ink: #14539f;
-  --color-brand-tint: #eaf2fe;
+  /* FunderMaps house colours (fundermaps.com). */
+  --color-navy: #191e3c;
+  --color-brand: #0c75a8;
+  --color-brand-ink: #0a5d86;
+  --color-brand-tint: #e7f6fd;
   --color-green: #2f7d51;
   --color-green-tint: #e7f3ec;
   --color-amber: #8a6413;
