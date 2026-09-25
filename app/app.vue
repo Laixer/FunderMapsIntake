@@ -30,7 +30,7 @@ const partners = [
       <!-- The parties whose members report through this form (Don, 2026-09-25):
            present but quiet, greyed out. -->
       <div class="space-y-3">
-        <p class="text-xs font-semibold uppercase tracking-wide text-faint">Meldingen komen onder meer binnen via</p>
+        <p class="text-xs font-semibold uppercase tracking-wide text-faint">Terugmeldingen voor uitgegeven funderingsrisico-indicaties aan</p>
         <ul class="flex flex-wrap items-center gap-x-8 gap-y-4">
           <li v-for="p in partners" :key="p.name">
             <img :src="p.src" :alt="p.name" class="h-7 w-auto opacity-60 grayscale" loading="lazy">
