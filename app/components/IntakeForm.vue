@@ -81,6 +81,32 @@ const blocker = computed(() => {
   return null
 })
 
+/**
+ * The note names a file that is not there (Don, 2026-10-02: of 16 meldingen
+ * without a document, 3 said "zie bijgevoegd document" or sent a WeTransfer
+ * link). A hint, not a blocker: the melder may mean a file sent earlier.
+ */
+const MENTIONS_FILE = /\b(bijlage|bijlagen|bijgevoegd|bijgevoegde|bijvoegen|meegestuurd|attachment)\b/i
+const SHARE_LINK = /we\.tl\/|wetransfer\.com|dropbox\.com|drive\.google\.com|onedrive\.live\.com|1drv\.ms/i
+const attachmentHint = computed(() => {
+  if (settled.value.length > 0) return null
+  const text = note.value
+  if (SHARE_LINK.test(text)) {
+    return 'U verwijst naar een downloadlink. Zo’n link verloopt vaak na een paar dagen; voeg het bestand liever hier toe.'
+  }
+  if (MENTIONS_FILE.test(text)) {
+    return 'U noemt een bijlage, maar er is nog geen bestand toegevoegd.'
+  }
+  return null
+})
+
+function toUploads() {
+  uploadAnchor.value?.scrollIntoView({
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    block: 'start',
+  })
+}
+
 const sending = ref(false)
 const failure = ref('')
 const receipt = ref<{ meldcode: string } | null>(null)
@@ -178,6 +204,17 @@ async function submit() {
       />
 
       <div class="flex flex-col gap-3">
+        <div
+          v-if="attachmentHint"
+          class="flex flex-col gap-2 rounded-xl border border-amber bg-amber-tint px-4 py-3 text-ink"
+          role="status"
+        >
+          <p>{{ attachmentHint }}</p>
+          <button type="button" class="self-start font-semibold text-brand-ink underline" @click="toUploads">
+            Bestand toevoegen
+          </button>
+        </div>
+
         <p v-if="failure" class="rounded-xl border border-red bg-red-tint px-4 py-3 text-ink">
           {{ failure }}
         </p>
