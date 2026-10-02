@@ -20,6 +20,8 @@ interface Status {
   state: 'ontvangen' | 'in behandeling' | 'verwerkt' | 'afgewezen'
   explanation: string
   attachments: number
+  /** The pand's risk as registered now, plus why (API, 2026-10-02). Empty when unknown. */
+  risk?: string[]
 }
 
 const email = ref('')
@@ -113,6 +115,20 @@ const tone: Record<Status['state'], string> = {
           <dd class="font-semibold text-ink">{{ status.attachments }}</dd>
         </div>
       </dl>
+
+      <!-- Don, 2026-10-02: "waar zie ik het nieuwe risico?" was the most common
+           reply to our mails. The first three lines are the risks, the rest
+           says what they are based on. -->
+      <div v-if="status.risk?.length" class="flex flex-col gap-2 rounded-xl border border-line bg-surface p-5">
+        <p class="text-sm font-semibold tracking-wide text-muted uppercase">Funderingsrisico nu</p>
+        <ul class="flex flex-col gap-1">
+          <li v-for="line in status.risk.slice(0, 3)" :key="line" class="font-semibold text-ink">{{ line }}</li>
+        </ul>
+        <p v-for="line in status.risk.slice(3)" :key="line" class="text-body">{{ line }}</p>
+        <p class="text-sm text-muted">
+          Het risico wordt elke dag opnieuw berekend. Een wijziging door uw melding ziet u hier de dag na verwerking.
+        </p>
+      </div>
 
       <NuxtLink to="/" class="text-brand-ink underline-offset-2 hover:underline">
         Nog een melding doen
