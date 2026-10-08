@@ -46,6 +46,15 @@ async function look() {
   }
 }
 
+/**
+ * The risk letters only (Don, 2026-10-08: "Haal (verhoogd risico) weg, noem
+ * alleen de A–E indicaties"). The API words each class ("C (verhoogd
+ * risico)") the way the mails do; on this page the letter stands alone.
+ */
+const lettersOnly = (line: string) =>
+  line.replace(/ \((?:geen|laag|verhoogd|hoog|aanzienlijk hoog) risico\)/g, '')
+const riskLines = computed(() => (status.value?.risk ?? []).map(lettersOnly))
+
 const tone: Record<Status['state'], string> = {
   ontvangen: 'border-line bg-surface',
   'in behandeling': 'border-brand bg-brand-tint',
@@ -119,12 +128,12 @@ const tone: Record<Status['state'], string> = {
       <!-- Don, 2026-10-02: "waar zie ik het nieuwe risico?" was the most common
            reply to our mails. The first three lines are the risks, the rest
            says what they are based on. -->
-      <div v-if="status.risk?.length" class="flex flex-col gap-2 rounded-xl border border-line bg-surface p-5">
+      <div v-if="riskLines.length" class="flex flex-col gap-2 rounded-xl border border-line bg-surface p-5">
         <p class="text-sm font-semibold tracking-wide text-muted uppercase">Funderingsrisico nu</p>
         <ul class="flex flex-col gap-1">
-          <li v-for="line in status.risk.slice(0, 3)" :key="line" class="font-semibold text-ink">{{ line }}</li>
+          <li v-for="line in riskLines.slice(0, 3)" :key="line" class="font-semibold text-ink">{{ line }}</li>
         </ul>
-        <p v-for="line in status.risk.slice(3)" :key="line" class="text-body">{{ line }}</p>
+        <p v-for="line in riskLines.slice(3)" :key="line" class="text-body">{{ line }}</p>
         <p class="text-sm text-muted">
           Het risico wordt elke dag opnieuw berekend. Een wijziging door uw melding ziet u hier de dag na verwerking.
         </p>
