@@ -34,7 +34,24 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: "nl" },
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-        { name: "theme-color", content: "#1f6feb" },
+        // The header's navy, so a phone's browser bar runs into it.
+        { name: "theme-color", content: "#191e3c" },
+        // What a shared link shows as its card. The same on every page: the
+        // pages per pand and per melding are personal and say nothing here.
+        { property: "og:site_name", content: "FunderMaps" },
+        { property: "og:type", content: "website" },
+        { property: "og:locale", content: "nl_NL" },
+        { property: "og:title", content: "Funderingsinformatie doorgeven — FunderMaps" },
+        {
+          property: "og:description",
+          content:
+            "Geef door dat de funderingsinformatie van een pand niet klopt, of lever een " +
+            "funderingsonderzoek of bewijs van herstel aan.",
+        },
+        { property: "og:image", content: "https://fundermaps.com/og-image.jpg" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "685" },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
       // The mark the other FunderMaps apps show in the tab; public/favicon.ico
       // is the same mark for browsers that do not take an SVG icon.
