@@ -36,6 +36,9 @@ export default defineNuxtConfig({
         { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
         { name: "theme-color", content: "#1f6feb" },
       ],
+      // The mark the other FunderMaps apps show in the tab; public/favicon.ico
+      // is the same mark for browsers that do not take an SVG icon.
+      link: [{ rel: "icon", type: "image/svg+xml", href: "/fundermaps-mark.svg" }],
     },
   },
 });
