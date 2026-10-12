@@ -134,12 +134,17 @@ function onPick(e: Event) {
       </li>
     </ul>
 
+    <!-- The button below is the control; this input only opens the file
+         picker for it. Kept out of the tab order and away from screen readers,
+         which otherwise meet an unnamed field first and the button second. -->
     <input
       ref="input"
       type="file"
       multiple
       accept="application/pdf,image/*"
       class="sr-only"
+      tabindex="-1"
+      aria-hidden="true"
       @change="onPick"
     />
     <button
