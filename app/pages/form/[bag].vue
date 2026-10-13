@@ -24,7 +24,7 @@ const { data: prefill } = await useAsyncData<ResolvedAddress | null>(
 
 useHead({
   title: prefill.value
-    ? `${prefill.value.label} — funderingsinformatie doorgeven`
+    ? `Funderingsinformatie doorgeven: ${prefill.value.label} — FunderMaps`
     : 'Funderingsinformatie doorgeven — FunderMaps',
   // A deep link is handed out, pasted and forwarded; it should not accumulate
   // in search results under a stranger's address.

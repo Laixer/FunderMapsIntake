@@ -1,10 +1,20 @@
 <script setup lang="ts">
+// One height per logo: the portrait file has white space around its mark, so
+// at the height of the wide ones it shrinks to a speck.
 const partners = [
-  { name: 'NRVT', src: '/partners/nrvt.svg' },
-  { name: 'NWWI', src: '/partners/nwwi.svg' },
-  { name: 'VastgoedNED', src: '/partners/vastgoedned.svg' },
-  { name: 'NVM', src: '/partners/nvm.png' },
+  { name: 'NRVT', src: '/partners/nrvt.svg', height: 'h-7' },
+  { name: 'NWWI', src: '/partners/nwwi.svg', height: 'h-7' },
+  { name: 'VastgoedNED', src: '/partners/vastgoedned.svg', height: 'h-7' },
+  { name: 'NVM', src: '/partners/nvm.png', height: 'h-10' },
 ]
+
+// The form has no heading of its own, so on its two routes the header's line
+// is the page's h1. The melding page and the receipt bring their own.
+const route = useRoute()
+const receiptShown = useState('receipt-shown', () => false)
+const lineIsHeading = computed(
+  () => (route.name === 'index' || route.name === 'form-bag') && !receiptShown.value,
+)
 </script>
 
 <template>
@@ -16,7 +26,7 @@ const partners = [
         <NuxtLink to="/" class="flex items-center" aria-label="FunderMaps, naar het begin van het formulier">
           <img src="/logo/fundermaps-logo-white.svg" alt="FunderMaps" class="h-7 w-auto">
         </NuxtLink>
-        <span class="text-sm text-white/70">Funderingsinformatie doorgeven</span>
+        <component :is="lineIsHeading ? 'h1' : 'span'" class="text-sm text-white/70">Funderingsinformatie doorgeven</component>
       </div>
     </header>
 
@@ -33,7 +43,7 @@ const partners = [
         <p class="text-xs font-semibold uppercase tracking-wide text-muted">Terugmeldingen voor uitgegeven funderingsrisico-indicaties aan</p>
         <ul class="flex flex-wrap items-center gap-x-8 gap-y-4">
           <li v-for="p in partners" :key="p.name">
-            <img :src="p.src" :alt="p.name" class="h-7 w-auto opacity-60 grayscale" loading="lazy">
+            <img :src="p.src" :alt="p.name" class="w-auto opacity-60 grayscale" :class="p.height" loading="lazy">
           </li>
         </ul>
       </div>

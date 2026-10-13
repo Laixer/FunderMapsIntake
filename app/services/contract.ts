@@ -123,8 +123,8 @@ export const RECOVERY_TYPES = [
 ] as const
 
 export const RISK_DIRECTIONS = [
-  { value: 'Lager risico', label: 'Het risico is lager dan u toont' },
-  { value: 'Hoger risico', label: 'Het risico is hoger dan u toont' },
+  { value: 'Lager risico', label: 'Het risico is lager dan FunderMaps toont' },
+  { value: 'Hoger risico', label: 'Het risico is hoger dan FunderMaps toont' },
   { value: 'Anders / weet niet', label: 'Anders, of ik weet het niet' },
 ] as const
 
