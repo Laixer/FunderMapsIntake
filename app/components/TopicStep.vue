@@ -68,7 +68,9 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
         <label class="block">
           <span class="block font-semibold text-ink">Wat is het funderingstype?</span>
           <span class="mb-2 block text-sm text-muted">Weet u het niet zeker? Laat het leeg.</span>
-          <select v-model="foundationType" class="min-h-13 w-full rounded-xl border border-line-strong bg-surface px-3 text-base">
+          <select v-model="foundationType"
+                  class="min-h-13 w-full rounded-xl border border-line-strong bg-surface px-3 text-base
+                         focus:border-brand focus:ring-2 focus:ring-brand-tint focus:outline-none">
             <option value="">Weet ik niet</option>
             <option v-for="g in FOUNDATION_GROUPS" :key="g.value" :value="g.value">{{ g.label }}</option>
           </select>
@@ -78,7 +80,9 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
       <template v-else-if="chosen.key === 'recoveryType'">
         <label class="block">
           <span class="block font-semibold text-ink">Welk soort herstel?</span>
-          <select v-model="recoveryType" required class="mt-2 min-h-13 w-full rounded-xl border border-line-strong bg-surface px-3 text-base">
+          <select v-model="recoveryType" required
+                  class="mt-2 min-h-13 w-full rounded-xl border border-line-strong bg-surface px-3 text-base
+                         focus:border-brand focus:ring-2 focus:ring-brand-tint focus:outline-none">
             <option value="">Kies een soort herstel</option>
             <option v-for="r in RECOVERY_TYPES" :key="r.value" :value="r.label">{{ r.label }}</option>
           </select>
@@ -90,7 +94,8 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
           <span class="block font-semibold text-ink">Registratienummer</span>
           <span class="mb-2 block text-sm text-muted">Het REG- of NAFO-nummer, als u het bij de hand heeft.</span>
           <input v-model="registration" inputmode="text" placeholder="Bijv. REG-0001981"
-                 class="min-h-13 w-full rounded-xl border border-line-strong bg-surface px-4 text-base placeholder:text-faint" />
+                 class="min-h-13 w-full rounded-xl border border-line-strong bg-surface px-4 text-base placeholder:text-faint
+                        focus:border-brand focus:ring-2 focus:ring-brand-tint focus:outline-none" />
         </label>
       </template>
 
@@ -98,9 +103,9 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
         <fieldset class="flex flex-col gap-2">
           <legend class="font-semibold text-ink">In welke richting klopt het niet?</legend>
           <label v-for="d in RISK_DIRECTIONS" :key="d.value"
-                 class="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border px-3"
+                 class="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border px-3 py-2"
                  :class="riskDirection === d.value ? 'border-brand bg-brand-tint' : 'border-line'">
-            <input v-model="riskDirection" type="radio" :value="d.value" name="richting" class="h-5 w-5 accent-brand" />
+            <input v-model="riskDirection" type="radio" :value="d.value" name="richting" class="h-5 w-5 shrink-0 accent-brand" />
             <span>{{ d.label }}</span>
           </label>
         </fieldset>
@@ -116,7 +121,12 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
         </label>
       </template>
 
-      <p v-if="chosen.evidenceHint" class="text-sm text-muted">{{ chosen.evidenceHint }}</p>
+      <!-- Only where a document is required and can be added below: the upload
+           step shows an optional topic's hint itself, and a topic handled
+           elsewhere has no upload. -->
+      <p v-if="chosen.evidenceHint && chosen.evidenceRequired && !chosen.externalUrl" class="text-sm text-muted">
+        {{ chosen.evidenceHint }}
+      </p>
     </div>
   </section>
 </template>

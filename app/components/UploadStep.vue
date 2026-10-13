@@ -124,7 +124,8 @@ function onPick(e: Event) {
           <span class="mb-1 block text-sm font-semibold text-ink">Wat voor document is dit?</span>
           <select
             v-model="u.category"
-            class="min-h-12 w-full rounded-lg border border-line-strong bg-surface px-3 text-base"
+            class="min-h-12 w-full rounded-lg border border-line-strong bg-surface px-3 text-base
+                   focus:border-brand focus:ring-2 focus:ring-brand-tint focus:outline-none"
           >
             <option v-for="c in ATTACHMENT_CATEGORIES" :key="c.value" :value="c.value">
               {{ c.label }}

@@ -111,6 +111,12 @@ const sending = ref(false)
 const failure = ref('')
 const receipt = ref<{ meldcode: string } | null>(null)
 
+// The receipt has a heading of its own; until it shows, the header's line is
+// this form's h1 (app.vue).
+const receiptShown = useState('receipt-shown', () => false)
+watch(receipt, (r) => (receiptShown.value = !!r))
+onBeforeUnmount(() => (receiptShown.value = false))
+
 async function submit() {
   if (blocker.value || sending.value) return
   sending.value = true

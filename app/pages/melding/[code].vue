@@ -17,7 +17,7 @@ interface Status {
   meldcode: string
   address: string
   received: string
-  state: 'ontvangen' | 'in behandeling' | 'verwerkt' | 'afgewezen'
+  state: 'ontvangen' | 'in behandeling' | 'verwerkt' | 'afgehandeld en gesloten' | 'afgewezen'
   explanation: string
   attachments: number
   /** The pand's risk as registered now, plus why (API, 2026-10-02). Empty when unknown. */
@@ -59,6 +59,7 @@ const tone: Record<Status['state'], string> = {
   ontvangen: 'border-line bg-surface',
   'in behandeling': 'border-brand bg-brand-tint',
   verwerkt: 'border-green bg-green-tint',
+  'afgehandeld en gesloten': 'border-line bg-surface',
   afgewezen: 'border-amber bg-amber-tint',
 }
 </script>
@@ -104,14 +105,16 @@ const tone: Record<Status['state'], string> = {
     </form>
 
     <template v-else>
-      <div class="rounded-xl border p-5" :class="tone[status.state]">
+      <!-- A state this page does not know yet still gets the plain card. -->
+      <div class="rounded-xl border p-5" :class="tone[status.state] ?? 'border-line bg-surface'">
         <p class="text-sm font-semibold tracking-wide text-muted uppercase">Status</p>
-        <p class="mt-1 text-xl font-bold text-ink">{{ status.state }}</p>
-        <p class="mt-2 text-body">{{ status.explanation }}</p>
+        <p class="mt-1 text-xl font-bold text-ink first-letter:uppercase">{{ status.state }}</p>
+        <!-- pre-line: a reviewer's answer comes with blank lines between its paragraphs. -->
+        <p class="mt-2 whitespace-pre-line text-body">{{ status.explanation }}</p>
       </div>
 
       <dl class="flex flex-col gap-3 rounded-xl border border-line bg-surface p-5">
-        <div>
+        <div v-if="status.address">
           <dt class="text-sm text-muted">Pand</dt>
           <dd class="font-semibold text-ink">{{ status.address }}</dd>
         </div>
