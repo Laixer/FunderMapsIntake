@@ -83,7 +83,7 @@ export const TOPICS: readonly Topic[] = [
     label: 'Ik lever een funderingsonderzoek aan',
     hint: 'Een Fase 1- of Fase 2-onderzoek.',
     evidenceRequired: true,
-    evidenceHint: 'Voeg het rapport toe en kies “Funderingsonderzoek” als soort.',
+    evidenceHint: 'Voeg het rapport zelf toe.',
   },
   {
     key: 'noDamage',

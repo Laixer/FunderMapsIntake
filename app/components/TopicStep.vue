@@ -50,8 +50,9 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
       </label>
     </div>
 
-    <!-- The branch. Only what this topic needs, nothing else. -->
-    <div v-if="chosen" class="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
+    <!-- The branch. Only what this topic needs, nothing else. "Iets anders"
+         needs nothing here: no empty box. -->
+    <div v-if="chosen && chosen.key !== 'other'" class="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
       <!-- Handled elsewhere: say where, and stop here. -->
       <template v-if="chosen.externalUrl">
         <p class="text-ink">
@@ -104,7 +105,7 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
           <legend class="font-semibold text-ink">In welke richting klopt het niet?</legend>
           <label v-for="d in RISK_DIRECTIONS" :key="d.value"
                  class="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border px-3 py-2"
-                 :class="riskDirection === d.value ? 'border-brand bg-brand-tint' : 'border-line'">
+                 :class="riskDirection === d.value ? 'border-brand bg-brand-tint' : 'border-line hover:border-line-strong'">
             <input v-model="riskDirection" type="radio" :value="d.value" name="richting" class="h-5 w-5 shrink-0 accent-brand" />
             <span>{{ d.label }}</span>
           </label>
