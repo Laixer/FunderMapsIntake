@@ -68,7 +68,7 @@ function onPick(e: Event) {
         :key="r + i"
         class="flex items-start gap-3 rounded-xl border border-red bg-red-tint px-4 py-3 text-sm"
       >
-        <span class="min-w-0 flex-1 text-ink">{{ r }}</span>
+        <span class="min-w-0 flex-1 wrap-break-word text-ink">{{ r }}</span>
         <button type="button" class="shrink-0 font-semibold text-red underline-offset-2 hover:underline" @click="emit('dismiss', i)">
           Sluiten
         </button>
