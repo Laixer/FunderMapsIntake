@@ -59,7 +59,7 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
           gecontroleerd en krijgt u een certificaat; daarna verschijnt het herstel ook in FunderMaps.
         </p>
         <a :href="chosen.externalUrl" target="_blank" rel="noopener"
-           class="flex min-h-13 items-center justify-center rounded-xl bg-brand px-4 text-base font-bold text-white">
+           class="flex min-h-13 items-center justify-center rounded-xl bg-brand px-4 text-base font-bold text-white hover:bg-brand-ink">
           Naar het herstelformulier
         </a>
       </template>
@@ -109,16 +109,18 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
             <span>{{ d.label }}</span>
           </label>
         </fieldset>
-        <label class="block">
-          <span class="block font-semibold text-ink">Welke klasse zou het moeten zijn?</span>
+        <!-- A group, not a label: a label passes a click on its words on to
+             the first button inside it, which chose class A. -->
+        <fieldset>
+          <legend class="block font-semibold text-ink">Welke klasse zou het moeten zijn?</legend>
           <span class="mb-2 block text-sm text-muted">A is het laagste risico, E het hoogste. Optioneel.</span>
           <div class="flex gap-2">
             <button v-for="c in RISK_CLASSES" :key="c" type="button"
-                    class="min-h-12 flex-1 rounded-lg border font-semibold"
+                    class="min-h-12 flex-1 rounded-lg border font-semibold hover:border-brand"
                     :class="riskClass === c ? 'border-brand bg-brand-tint text-brand-ink' : 'border-line bg-surface'"
                     @click="riskClass = riskClass === c ? '' : c">{{ c }}</button>
           </div>
-        </label>
+        </fieldset>
       </template>
 
       <!-- Only where a document is required and can be added below: the upload

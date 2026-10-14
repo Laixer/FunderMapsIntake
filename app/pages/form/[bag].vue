@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ResolvedAddress } from '~/composables/usePdok'
+import { formatAddress, type ResolvedAddress } from '~/composables/usePdok'
 
 /**
  * The prefilled deep link — the whole reason this app renders on the server.
@@ -24,7 +24,7 @@ const { data: prefill } = await useAsyncData<ResolvedAddress | null>(
 
 useHead({
   title: prefill.value
-    ? `Funderingsinformatie doorgeven: ${prefill.value.label} — FunderMaps`
+    ? `Funderingsinformatie doorgeven: ${formatAddress(prefill.value.label)} — FunderMaps`
     : 'Funderingsinformatie doorgeven — FunderMaps',
   // A deep link is handed out, pasted and forwarded; it should not accumulate
   // in search results under a stranger's address.

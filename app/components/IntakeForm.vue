@@ -156,8 +156,9 @@ async function submit() {
       },
     })
   } catch {
-    failure.value =
-      'Het versturen is niet gelukt. Uw documenten zijn al opgeslagen — probeer het zo nog een keer.'
+    failure.value = settled.value.length
+      ? 'Het versturen is niet gelukt. Uw documenten zijn al opgeslagen — probeer het zo nog een keer.'
+      : 'Het versturen is niet gelukt. Probeer het zo nog een keer.'
   } finally {
     sending.value = false
   }
@@ -166,7 +167,13 @@ async function submit() {
 
 <template>
   <!-- Done. Everything above is gone; the meldcode is the only thing left. -->
-  <SubmissionReceipt v-if="receipt" :meldcode="receipt.meldcode" :email="email" :address="address?.label ?? ''" />
+  <SubmissionReceipt
+    v-if="receipt"
+    :meldcode="receipt.meldcode"
+    :email="email"
+    :address="address?.label ?? ''"
+    :documents="settled.length"
+  />
 
   <form v-else class="flex flex-col gap-8" novalidate @submit.prevent="submit">
     <AddressStep v-model="address" />
@@ -229,7 +236,7 @@ async function submit() {
           type="submit"
           :disabled="!!blocker || sending"
           class="min-h-14 w-full rounded-xl bg-brand px-4 text-lg font-bold text-white
-                 disabled:bg-line-strong disabled:text-muted"
+                 enabled:hover:bg-brand-ink disabled:bg-line-strong disabled:text-muted"
         >
           {{ sending ? 'Versturen…' : 'Melding versturen' }}
         </button>

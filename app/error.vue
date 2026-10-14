@@ -19,7 +19,7 @@ useHead({
     <header class="bg-navy">
       <div class="mx-auto flex max-w-2xl flex-wrap items-center gap-x-4 gap-y-1 px-4 py-4">
         <a href="/" class="flex items-center" aria-label="FunderMaps, naar het begin van het formulier">
-          <img src="/logo/fundermaps-logo-white.svg" alt="FunderMaps" class="h-7 w-auto">
+          <img src="/logo/fundermaps-logo-white.svg" alt="FunderMaps" width="222" height="41" class="h-7 w-auto">
         </a>
         <span class="text-sm text-white/70">Funderingsinformatie doorgeven</span>
       </div>

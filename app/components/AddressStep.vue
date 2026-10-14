@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ResolvedAddress, Suggestion } from '~/composables/usePdok'
+import { formatAddress, type ResolvedAddress, type Suggestion } from '~/composables/usePdok'
 
 /**
  * Step 1 — which building.
@@ -56,7 +56,7 @@ function clear() {
     >
       <span aria-hidden="true" class="mt-0.5 text-green">✓</span>
       <span class="min-w-0 flex-1">
-        <span class="block font-semibold text-ink">{{ model.label }}</span>
+        <span class="block font-semibold text-ink">{{ formatAddress(model.label) }}</span>
         <span class="block font-mono text-sm text-muted">BAG {{ model.bagId }}</span>
       </span>
       <button
@@ -95,13 +95,14 @@ function clear() {
         class="mt-2 overflow-hidden rounded-xl border border-line bg-surface"
       >
         <li v-for="s in suggestions" :key="s.id">
+          <!-- The focus ring inside the button: the list's rounded clip cut it off. -->
           <button
             type="button"
             class="min-h-13 w-full border-b border-line px-4 py-3 text-left last:border-b-0
-                   hover:bg-canvas active:bg-canvas"
+                   hover:bg-canvas focus-visible:-outline-offset-2 active:bg-canvas"
             @click="pick(s)"
           >
-            {{ s.label }}
+            {{ formatAddress(s.label) }}
           </button>
         </li>
       </ul>
