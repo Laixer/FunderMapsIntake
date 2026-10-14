@@ -98,7 +98,7 @@ export function useUploads(submissionId: () => string) {
       entry.progress = 1
     } catch {
       entry.state = 'failed'
-      entry.error = 'Uploaden is niet gelukt'
+      entry.error = 'uploaden is niet gelukt'
     }
   }
 

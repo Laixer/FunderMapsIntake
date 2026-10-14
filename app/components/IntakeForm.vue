@@ -120,7 +120,9 @@ onBeforeUnmount(() => (receiptShown.value = false))
 async function submit() {
   if (blocker.value || sending.value) return
   sending.value = true
-  failure.value = ''
+  // The red box stays while the button says "Versturen…": removing it would
+  // make the button jump away at every new try. A new failure overwrites it,
+  // a success replaces the whole form.
   try {
     receipt.value = await $fetch<{ meldcode: string }>('/api/submit', {
       method: 'POST',
