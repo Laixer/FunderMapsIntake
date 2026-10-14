@@ -33,6 +33,7 @@ const missed = ref(false)
 
 async function look() {
   if (!email.value.trim() || looking.value) return
+  const giveFocusBack = holdFocus()
   looking.value = true
   missed.value = false
   try {
@@ -45,6 +46,7 @@ async function look() {
     status.value = null
   } finally {
     looking.value = false
+    await giveFocusBack()
   }
 }
 

@@ -53,7 +53,7 @@ export function useUploads(submissionId: () => string) {
         continue
       }
       if (file.size > MAX_FILE_BYTES) {
-        reject(file.name, `groter dan ${humanSize(MAX_FILE_BYTES)}`)
+        reject(file.name, `groter dan ${MAX_FILE_BYTES / (1024 * 1024)} MB`)
         continue
       }
       if (file.size === 0) {

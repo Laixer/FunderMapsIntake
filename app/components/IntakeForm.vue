@@ -119,6 +119,7 @@ onBeforeUnmount(() => (receiptShown.value = false))
 
 async function submit() {
   if (blocker.value || sending.value) return
+  const giveFocusBack = holdFocus()
   sending.value = true
   // The red box stays while the button says "Versturen…": removing it would
   // make the button jump away at every new try. A new failure overwrites it,
@@ -165,6 +166,7 @@ async function submit() {
         : 'Het versturen is niet gelukt. Probeer het zo nog een keer.'
   } finally {
     sending.value = false
+    await giveFocusBack()
   }
 }
 </script>

@@ -14,6 +14,9 @@ const { suggestions, searching, failed, suggest, resolve } = usePdok()
 const term = ref('')
 const busy = ref(false)
 const open = ref(false)
+// The pause before a search starts. Until the search has answered, "Geen
+// adres gevonden" would be said of an address that was not looked for yet.
+const waiting = ref(false)
 
 let timer: ReturnType<typeof setTimeout> | undefined
 watch(term, (v) => {
@@ -21,7 +24,11 @@ watch(term, (v) => {
   // feels like it is keeping up.
   clearTimeout(timer)
   open.value = true
-  timer = setTimeout(() => suggest(v), 220)
+  waiting.value = v.trim().length >= 3
+  timer = setTimeout(() => {
+    waiting.value = false
+    suggest(v)
+  }, 220)
 })
 
 async function pick(s: Suggestion) {
@@ -85,7 +92,8 @@ function clear() {
       />
 
       <p v-if="busy" class="mt-2 text-sm text-muted">Adres ophalen…</p>
-      <p v-else-if="searching" class="mt-2 text-sm text-muted">Zoeken…</p>
+      <!-- Not above a list that is on screen: it pushed the list down and back at every pause. -->
+      <p v-else-if="(searching || waiting) && !suggestions.length" class="mt-2 text-sm text-muted">Zoeken…</p>
       <p v-else-if="failed" class="mt-2 text-sm text-red">
         Het adressenregister is even niet bereikbaar. Probeer het zo nog eens.
       </p>
@@ -107,7 +115,7 @@ function clear() {
         </li>
       </ul>
 
-      <p v-else-if="open && term.length >= 3 && !searching && !failed" class="mt-2 text-sm text-muted">
+      <p v-else-if="open && term.trim().length >= 3 && !searching && !waiting && !failed" class="mt-2 text-sm text-muted">
         Geen adres gevonden. Probeer straat en huisnummer, bijvoorbeeld “Kerkstraat 12”.
       </p>
     </div>
