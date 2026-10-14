@@ -69,7 +69,7 @@ function onPick(e: Event) {
         class="flex items-start gap-3 rounded-xl border border-red bg-red-tint px-4 py-3 text-sm"
       >
         <span class="min-w-0 flex-1 text-ink">{{ r }}</span>
-        <button type="button" class="shrink-0 font-semibold text-red" @click="emit('dismiss', i)">
+        <button type="button" class="shrink-0 font-semibold text-red underline-offset-2 hover:underline" @click="emit('dismiss', i)">
           Sluiten
         </button>
       </li>
@@ -94,7 +94,7 @@ function onPick(e: Event) {
           <button
             v-if="u.state === 'failed'"
             type="button"
-            class="min-h-11 shrink-0 px-2 font-semibold text-brand-ink"
+            class="min-h-11 shrink-0 px-2 font-semibold text-brand-ink underline-offset-2 hover:underline"
             @click="emit('retry', u.id)"
           >
             Opnieuw
@@ -152,7 +152,7 @@ function onPick(e: Event) {
       type="button"
       :disabled="full"
       class="min-h-14 rounded-xl border-2 border-dashed border-line-strong bg-surface px-4
-             font-semibold text-brand-ink disabled:opacity-50"
+             font-semibold text-brand-ink enabled:hover:border-brand disabled:opacity-50"
       @click="input?.click()"
     >
       <template v-if="full">Maximum van {{ MAX_FILES }} bestanden bereikt</template>

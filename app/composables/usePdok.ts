@@ -20,6 +20,16 @@ export interface ResolvedAddress {
   lng?: number
 }
 
+/**
+ * An address label as people write it: "1091VA Amsterdam" becomes "1091 VA
+ * Amsterdam". PDOK, our geocoder and the status lookup all leave the space out.
+ * A no-break space, so a narrow screen never splits the postcode.
+ * For display only: a submission carries the label exactly as it came.
+ */
+export function formatAddress(label: string): string {
+  return label.replace(/(^|, )(\d{4})([A-Z]{2})\b/, '$1$2\u00a0$3')
+}
+
 const SUGGEST = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest'
 const LOOKUP = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/lookup'
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatAddress } from '~/composables/usePdok'
+
 /**
  * The last screen.
  *
@@ -6,7 +8,7 @@
  * process that now runs without them. So it is the largest thing on the page,
  * selectable, and repeated in the email — not buried in a sentence of thanks.
  */
-const props = defineProps<{ meldcode: string; email: string; address: string }>()
+const props = defineProps<{ meldcode: string; email: string; address: string; documents: number }>()
 
 const copied = ref(false)
 async function copy() {
@@ -27,7 +29,7 @@ async function copy() {
       <span aria-hidden="true" class="text-3xl text-green">✓</span>
       <h1 class="text-2xl font-bold text-ink">Uw melding is binnen</h1>
       <p class="text-muted">
-        Wij hebben uw melding over <strong class="text-body">{{ address }}</strong> ontvangen.
+        Wij hebben uw melding over <strong class="text-body">{{ formatAddress(address) }}</strong> ontvangen.
       </p>
     </div>
 
@@ -51,7 +53,7 @@ async function copy() {
       <p class="text-muted">
         Wij sturen een bevestiging naar
         <strong class="text-body">{{ email }}</strong>. Een van onze beoordelaars
-        bekijkt uw melding en de documenten die u heeft meegestuurd. Als iets
+        bekijkt uw melding<template v-if="documents"> en de documenten die u heeft meegestuurd</template>. Als iets
         onduidelijk is, nemen wij contact met u op.
       </p>
     </div>
@@ -59,7 +61,7 @@ async function copy() {
     <NuxtLink
       :to="`/melding/${meldcode}`"
       class="flex min-h-14 items-center justify-center rounded-xl border border-line-strong
-             bg-surface px-4 font-semibold text-brand-ink"
+             bg-surface px-4 font-semibold text-brand-ink hover:border-brand"
     >
       Status van deze melding bekijken
     </NuxtLink>

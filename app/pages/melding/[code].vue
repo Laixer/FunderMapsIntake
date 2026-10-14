@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatAddress } from '~/composables/usePdok'
+
 /**
  * The melding portal.
  *
@@ -94,7 +96,7 @@ const tone: Record<Status['state'], string> = {
       <button
         type="submit"
         :disabled="looking || !email.trim()"
-        class="min-h-14 rounded-xl bg-brand px-4 font-bold text-white disabled:bg-line-strong disabled:text-muted"
+        class="min-h-14 rounded-xl bg-brand px-4 font-bold text-white enabled:hover:bg-brand-ink disabled:bg-line-strong disabled:text-muted"
       >
         {{ looking ? 'Zoeken…' : 'Melding bekijken' }}
       </button>
@@ -109,14 +111,15 @@ const tone: Record<Status['state'], string> = {
       <div class="rounded-xl border p-5" :class="tone[status.state] ?? 'border-line bg-surface'">
         <p class="text-sm font-semibold tracking-wide text-muted uppercase">Status</p>
         <p class="mt-1 text-xl font-bold text-ink first-letter:uppercase">{{ status.state }}</p>
-        <!-- pre-line: a reviewer's answer comes with blank lines between its paragraphs. -->
-        <p class="mt-2 whitespace-pre-line text-body">{{ status.explanation }}</p>
+        <!-- pre-line: a reviewer's answer comes with blank lines between its paragraphs.
+             wrap-break-word: and sometimes with a link longer than a phone is wide. -->
+        <p class="mt-2 whitespace-pre-line wrap-break-word text-body">{{ status.explanation }}</p>
       </div>
 
       <dl class="flex flex-col gap-3 rounded-xl border border-line bg-surface p-5">
         <div v-if="status.address">
           <dt class="text-sm text-muted">Pand</dt>
-          <dd class="font-semibold text-ink">{{ status.address }}</dd>
+          <dd class="font-semibold text-ink">{{ formatAddress(status.address) }}</dd>
         </div>
         <div>
           <dt class="text-sm text-muted">Ontvangen op</dt>
