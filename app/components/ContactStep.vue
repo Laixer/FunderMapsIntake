@@ -81,7 +81,10 @@ const field =
       <input v-model="phone" type="tel" inputmode="tel" autocomplete="tel" :class="field" />
     </label>
 
-    <label class="flex min-h-12 cursor-pointer items-start gap-3 rounded-lg border border-line bg-surface px-3 py-3 hover:border-line-strong">
+    <label
+      class="flex min-h-12 cursor-pointer items-start gap-3 rounded-lg border border-line bg-surface px-3 py-3"
+      :class="owner ? '' : 'hover:border-line-strong'"
+    >
       <input v-model="owner" type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 accent-brand" />
       <span>Ik ben eigenaar van dit pand</span>
     </label>
