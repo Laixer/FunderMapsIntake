@@ -31,12 +31,22 @@ watch(term, (v) => {
   }, 220)
 })
 
+const field = ref<HTMLInputElement | null>(null)
+
 async function pick(s: Suggestion) {
+  // The chosen suggestion leaves with its list: a keyboard pick that fails
+  // goes back to the field, where the list opens again for another try.
+  const giveFocusBack = holdFocus(() => field.value)
   busy.value = true
   open.value = false
+  failed.value = false
   const resolved = await resolve(s)
   busy.value = false
-  if (!resolved) return
+  if (!resolved) {
+    failed.value = true
+    await giveFocusBack()
+    return
+  }
   model.value = resolved
   term.value = resolved.label
 }
@@ -46,6 +56,7 @@ function clear() {
   term.value = ''
   suggestions.value = []
   open.value = false
+  failed.value = false
 }
 </script>
 
@@ -78,6 +89,7 @@ function clear() {
     <!-- Searching -->
     <div v-else class="relative">
       <input
+        ref="field"
         v-model="term"
         type="search"
         inputmode="search"

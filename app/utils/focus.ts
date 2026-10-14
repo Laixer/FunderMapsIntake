@@ -4,14 +4,16 @@
  * before the button turns busy, and what it returns once it is enabled again.
  * Only keyboard focus comes back: after a mouse click no focus mark was left
  * once the answer came, and none must appear now.
+ * `to` names another element to give it to, for a button that is gone by then.
  */
-export function holdFocus(): () => Promise<void> {
+export function holdFocus(to?: () => HTMLElement | null): () => Promise<void> {
   const el = document.activeElement
   const back = el instanceof HTMLElement && el.matches(':focus-visible') ? el : null
   return async () => {
     if (!back) return
     await nextTick()
-    // Not when something else has the focus by now, or the button is gone.
-    if (document.activeElement === document.body && back.isConnected) back.focus()
+    const target = to?.() ?? back
+    // Not when something else has the focus by now, or the element is gone.
+    if (document.activeElement === document.body && target.isConnected) target.focus()
   }
 }
