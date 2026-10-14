@@ -133,13 +133,14 @@ const tone: Record<Status['state'], string> = {
 
       <!-- Don, 2026-10-02: "waar zie ik het nieuwe risico?" was the most common
            reply to our mails. The first three lines are the risks, the rest
-           says what they are based on. -->
+           says what they are based on, which can quote a document's file name
+           longer than a phone is wide. -->
       <div v-if="riskLines.length" class="flex flex-col gap-2 rounded-xl border border-line bg-surface p-5">
         <p class="text-sm font-semibold tracking-wide text-muted uppercase">Funderingsrisico nu</p>
         <ul class="flex flex-col gap-1">
           <li v-for="line in riskLines.slice(0, 3)" :key="line" class="font-semibold text-ink">{{ line }}</li>
         </ul>
-        <p v-for="line in riskLines.slice(3)" :key="line" class="text-body">{{ line }}</p>
+        <p v-for="line in riskLines.slice(3)" :key="line" class="wrap-break-word text-body">{{ line }}</p>
         <p class="text-sm text-muted">
           Het risico wordt elke dag opnieuw berekend. Een wijziging door uw melding ziet u hier de dag na verwerking.
         </p>

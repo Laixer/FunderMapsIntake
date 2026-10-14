@@ -53,7 +53,8 @@ async function copy() {
       <p class="text-muted">
         Wij sturen een bevestiging naar
         <strong class="text-body">{{ email }}</strong>. Een van onze beoordelaars
-        bekijkt uw melding<template v-if="documents"> en de documenten die u heeft meegestuurd</template>. Als iets
+        bekijkt uw melding<template v-if="documents === 1"> en het document dat u heeft meegestuurd</template>
+        <template v-else-if="documents"> en de documenten die u heeft meegestuurd</template>. Als iets
         onduidelijk is, nemen wij contact met u op.
       </p>
     </div>

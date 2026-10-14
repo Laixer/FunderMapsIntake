@@ -156,9 +156,11 @@ async function submit() {
       },
     })
   } catch {
-    failure.value = settled.value.length
+    failure.value = settled.value.length > 1
       ? 'Het versturen is niet gelukt. Uw documenten zijn al opgeslagen — probeer het zo nog een keer.'
-      : 'Het versturen is niet gelukt. Probeer het zo nog een keer.'
+      : settled.value.length === 1
+        ? 'Het versturen is niet gelukt. Uw document is al opgeslagen — probeer het zo nog een keer.'
+        : 'Het versturen is niet gelukt. Probeer het zo nog een keer.'
   } finally {
     sending.value = false
   }
