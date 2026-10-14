@@ -115,7 +115,7 @@ const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
           <legend class="block font-semibold text-ink">Welke klasse zou het moeten zijn?</legend>
           <span class="mb-2 block text-sm text-muted">A is het laagste risico, E het hoogste. Optioneel.</span>
           <div class="flex gap-2">
-            <button v-for="c in RISK_CLASSES" :key="c" type="button"
+            <button v-for="c in RISK_CLASSES" :key="c" type="button" :aria-pressed="riskClass === c"
                     class="min-h-12 flex-1 rounded-lg border font-semibold hover:border-brand"
                     :class="riskClass === c ? 'border-brand bg-brand-tint text-brand-ink' : 'border-line bg-surface'"
                     @click="riskClass = riskClass === c ? '' : c">{{ c }}</button>
