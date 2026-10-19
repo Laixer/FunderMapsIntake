@@ -43,6 +43,7 @@ export function usePdok() {
     const q = term.trim()
     // Three characters is where results stop being noise.
     if (q.length < 3) {
+      cancel()
       suggestions.value = []
       return
     }
@@ -62,6 +63,12 @@ export function usePdok() {
     } finally {
       if (mine === seq) searching.value = false
     }
+  }
+
+  /** Drop the search that is running: its answer would land on a field that has moved on. */
+  function cancel() {
+    seq++
+    searching.value = false
   }
 
   /** Turn a chosen suggestion into a BAG id and a point. */
@@ -85,5 +92,5 @@ export function usePdok() {
     }
   }
 
-  return { suggestions, searching, failed, suggest, resolve }
+  return { suggestions, searching, failed, suggest, cancel, resolve }
 }

@@ -10,7 +10,7 @@ import { formatAddress, type ResolvedAddress, type Suggestion } from '~/composab
  */
 const model = defineModel<ResolvedAddress | null>()
 
-const { suggestions, searching, failed, suggest, resolve } = usePdok()
+const { suggestions, searching, failed, suggest, cancel, resolve } = usePdok()
 const term = ref('')
 const busy = ref(false)
 const open = ref(false)
@@ -23,6 +23,9 @@ watch(term, (v) => {
   // 220ms: long enough to skip most keystrokes, short enough that the list
   // feels like it is keeping up.
   clearTimeout(timer)
+  // The chosen address written back into the field is not a search: one started
+  // here answered after a quick "Wijzigen" and put an old list under the empty field.
+  if (model.value) return
   open.value = true
   waiting.value = v.trim().length >= 3
   timer = setTimeout(() => {
@@ -37,6 +40,8 @@ async function pick(s: Suggestion) {
   // The chosen suggestion leaves with its list: a keyboard pick that fails
   // goes back to the field, where the list opens again for another try.
   const giveFocusBack = holdFocus(() => field.value)
+  clearTimeout(timer)
+  cancel()
   busy.value = true
   open.value = false
   failed.value = false
@@ -52,6 +57,9 @@ async function pick(s: Suggestion) {
 }
 
 function clear() {
+  clearTimeout(timer)
+  cancel()
+  waiting.value = false
   model.value = null
   term.value = ''
   suggestions.value = []
@@ -103,12 +111,20 @@ function clear() {
         @focus="open = true"
       />
 
-      <p v-if="busy" class="mt-2 text-sm text-muted">Adres ophalen…</p>
-      <!-- Not above a list that is on screen: it pushed the list down and back at every pause. -->
-      <p v-else-if="(searching || waiting) && !suggestions.length" class="mt-2 text-sm text-muted">Zoeken…</p>
-      <p v-else-if="failed" class="mt-2 text-sm text-red">
-        Het adressenregister is even niet bereikbaar. Probeer het zo nog eens.
-      </p>
+      <!-- Every line under the field in one live region, so a screen reader hears
+           them too (a pick that failed, no result). The region stays in the page:
+           one that appears together with its text is not read out. -->
+      <div role="status" aria-live="polite">
+        <p v-if="busy" class="mt-2 text-sm text-muted">Adres ophalen…</p>
+        <!-- Not above a list that is on screen: it pushed the list down and back at every pause. -->
+        <p v-else-if="(searching || waiting) && !suggestions.length" class="mt-2 text-sm text-muted">Zoeken…</p>
+        <p v-else-if="failed" class="mt-2 text-sm text-red">
+          Het adressenregister is even niet bereikbaar. Probeer het zo nog eens.
+        </p>
+        <p v-else-if="open && !suggestions.length && term.trim().length >= 3" class="mt-2 text-sm text-muted">
+          Geen adres gevonden. Probeer straat en huisnummer, bijvoorbeeld “Kerkstraat 12”.
+        </p>
+      </div>
 
       <ul
         v-if="open && suggestions.length"
@@ -126,10 +142,6 @@ function clear() {
           </button>
         </li>
       </ul>
-
-      <p v-else-if="open && term.trim().length >= 3 && !searching && !waiting && !failed" class="mt-2 text-sm text-muted">
-        Geen adres gevonden. Probeer straat en huisnummer, bijvoorbeeld “Kerkstraat 12”.
-      </p>
     </div>
   </section>
 </template>
