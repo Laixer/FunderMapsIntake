@@ -41,6 +41,9 @@ export function useUploads(submissionId: () => string) {
 
   const busy = computed(() => uploads.value.some((u) => u.state === 'uploading'))
   const settled = computed(() => uploads.value.filter((u) => u.state === 'done'))
+  // The picked file of every upload that has not landed yet, so "Opnieuw" can
+  // send it again. A File is a handle on what was picked, not its bytes.
+  const picked = new Map<string, File>()
 
   function reject(name: string, why: string) {
     rejected.value = [...rejected.value, `${name} — ${why}`]
@@ -77,6 +80,7 @@ export function useUploads(submissionId: () => string) {
         progress: 0,
       })
       uploads.value = [...uploads.value, entry]
+      picked.set(entry.id, file)
       void send(entry, file)
     }
   }
@@ -96,6 +100,7 @@ export function useUploads(submissionId: () => string) {
       entry.key = grant.key
       entry.state = 'done'
       entry.progress = 1
+      picked.delete(entry.id)
     } catch {
       entry.state = 'failed'
       entry.error = 'uploaden is niet gelukt'
@@ -117,12 +122,18 @@ export function useUploads(submissionId: () => string) {
 
   function remove(id: string) {
     uploads.value = uploads.value.filter((u) => u.id !== id)
+    picked.delete(id)
   }
 
   function retry(id: string) {
-    // The File is gone once dropped, so a failed upload is removed and the
-    // melder picks it again. Honest, and shorter than holding blobs in memory.
-    remove(id)
+    // The same file again, with a new upload grant: the melder does not pick it a second time.
+    const entry = uploads.value.find((u) => u.id === id)
+    const file = picked.get(id)
+    if (!entry || !file) return remove(id)
+    entry.state = 'uploading'
+    entry.progress = 0
+    entry.error = undefined
+    void send(entry, file)
   }
 
   function dismiss(index: number) {
