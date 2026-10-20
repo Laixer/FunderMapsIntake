@@ -21,6 +21,7 @@ const note = defineModel<string>('note')
 
 const chosen = computed(() => REPORTER_TYPES.find((r) => r.value === type.value) ?? null)
 const needsCompany = computed(() => chosen.value?.company === true)
+const companyLabel = computed(() => (chosen.value && 'companyLabel' in chosen.value ? chosen.value.companyLabel : ''))
 
 const field =
   'min-h-13 w-full rounded-xl border border-line-strong bg-surface px-4 text-base placeholder:text-faint ' +
@@ -51,7 +52,7 @@ const field =
     </fieldset>
 
     <label v-if="needsCompany" class="block">
-      <span class="mb-1 block font-semibold text-ink">{{ chosen?.companyLabel }}</span>
+      <span class="mb-1 block font-semibold text-ink">{{ companyLabel }}</span>
       <input v-model="company" type="text" autocomplete="organization" :class="field" />
     </label>
 
