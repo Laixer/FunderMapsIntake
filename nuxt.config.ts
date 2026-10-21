@@ -22,11 +22,14 @@ export default defineNuxtConfig({
     s3SecretKey: "",
     apiBase: "",
     intakeToken: "",
+    // Cloudflare Turnstile. Both empty = no check (server/utils/turnstile.ts).
+    turnstileSecret: "",
 
     // The geocoder is a public endpoint, so the browser may call it directly
     // when hydrating a deep link.
     public: {
       apiBase: "",
+      turnstileSiteKey: "",
     },
   },
   app: {

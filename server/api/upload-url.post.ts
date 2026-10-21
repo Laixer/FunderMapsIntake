@@ -2,6 +2,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { INTAKE_PREFIX, spaces } from '../utils/spaces'
 import { throttle } from '../utils/throttle'
+import { requireHuman } from '../utils/turnstile'
 
 /**
  * Hand the browser one presigned PUT.
@@ -34,6 +35,7 @@ const MAX_BYTES = 25 * 1024 * 1024
 
 export default defineEventHandler(async (event) => {
   throttle(event, 40, 60_000)
+  await requireHuman(event)
 
   const body = await readBody<{ name?: string; size?: number; type?: string }>(event)
   const size = Number(body?.size ?? 0)

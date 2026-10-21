@@ -36,6 +36,7 @@ export function humanSize(bytes: number): string {
 }
 
 export function useUploads(submissionId: () => string) {
+  const turnstile = useTurnstile()
   const uploads = ref<Upload[]>([])
   const rejected = ref<string[]>([])
 
@@ -89,6 +90,7 @@ export function useUploads(submissionId: () => string) {
     try {
       const grant = await $fetch<{ url: string; key: string }>('/api/upload-url', {
         method: 'POST',
+        headers: { 'x-turnstile-token': await turnstile.token() },
         body: {
           submissionId: submissionId(),
           name: file.name,

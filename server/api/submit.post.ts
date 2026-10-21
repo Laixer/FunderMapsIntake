@@ -1,6 +1,7 @@
 import { HeadObjectCommand } from '@aws-sdk/client-s3'
 import { INTAKE_PREFIX, spaces } from '../utils/spaces'
 import { clientIp, throttle } from '../utils/throttle'
+import { requireHuman } from '../utils/turnstile'
 
 /**
  * Take the submission and hand it to FunderMaps.
@@ -25,6 +26,7 @@ export default defineEventHandler(async (event) => {
   // behind one NAT address share the bucket (Don hit it 2026-09-11). Still a
   // speed bump against a script, not a security control.
   throttle(event, 30, 60_000)
+  await requireHuman(event)
 
   const body = await readBody<Record<string, any>>(event)
   const config = useRuntimeConfig()

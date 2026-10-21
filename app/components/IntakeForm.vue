@@ -31,6 +31,7 @@ const owner = ref(false)
 const note = ref('')
 
 const { uploads, rejected, busy, settled, add, remove, retry, dismiss } = useUploads(() => submissionId)
+const turnstile = useTurnstile()
 
 const chosen = computed(() => TOPICS.find((t) => t.key === topic.value) ?? null)
 const evidenceRequired = computed(() => chosen.value?.evidenceRequired ?? false)
@@ -127,6 +128,7 @@ async function submit() {
   try {
     receipt.value = await $fetch<{ meldcode: string }>('/api/submit', {
       method: 'POST',
+      headers: { 'x-turnstile-token': await turnstile.token() },
       body: {
         submissionId,
         formVersion: FORM_VERSION,
