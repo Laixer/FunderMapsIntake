@@ -96,13 +96,21 @@ would turn the page into a way to enumerate which codes are real.
 
 ## Configuration
 
-Server-only, except `NUXT_PUBLIC_API_BASE`:
+Server-only, except the two `NUXT_PUBLIC_*`:
 
 ```
 NUXT_S3_ACCESS_KEY   NUXT_S3_SECRET_KEY   NUXT_S3_BUCKET (default: fundermaps)
 NUXT_API_BASE        NUXT_INTAKE_TOKEN
 NUXT_PUBLIC_API_BASE (the geocoder is public; the browser calls it directly)
+NUXT_TURNSTILE_SECRET            Cloudflare Turnstile secret (a credential)
+NUXT_PUBLIC_TURNSTILE_SITE_KEY   its site key (public by design)
 ```
+
+Both Turnstile values empty = no check. With them set, every upload grant and
+every submission needs a fresh Turnstile token (`server/utils/turnstile.ts`,
+`app/composables/useTurnstile.ts`). Cloudflare's test keys
+(`1x00000000000000000000AA` / `1x0000000000000000000000000000000AA`) always
+pass, for local work.
 
 Point `NUXT_S3_BUCKET` at `fundermaps-development` when developing. Nothing here
 may ever write to `dataops/` or `inquiry-report/`.
