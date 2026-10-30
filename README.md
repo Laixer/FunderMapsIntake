@@ -1,5 +1,11 @@
 # FunderMaps Intake
 
+> **Retired on 2026-10-30.** The melden portal moved into **FunderMapsStudio** (`app/intake/`, copied as-is at its
+> `app/intake/SOURCE`): melden.fundermaps.com is served by the Studio app and shows only the portal there, still without a
+> login. Its three server routes are the API's public `/api/submission` routes (FunderMapsApi #311). The melding page is
+> `/status/<code>` now; `/melding/<code>` redirects. The app `fundermaps-intake-prod` is deleted. This repo is archived
+> and kept for reference.
+
 The public terugmeldformulier. Someone tells us the foundation information we
 hold for a building is wrong, or hands us the evidence that proves it.
 
